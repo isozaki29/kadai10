@@ -1,20 +1,18 @@
 package com.example.kadai10.service;
 
 import com.example.kadai10.entity.Movie;
-import com.example.kadai10.exception.ResourceNotFoundException;
+import com.example.kadai10.exception.NotFoundURLException;
 import com.example.kadai10.form.MovieForm;
 import com.example.kadai10.mapper.MovieMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MovieServiceImpl implements MovieService {
     private final MovieMapper movieMapper;
-
-    public MovieServiceImpl(MovieMapper movieMapper) {
-        this.movieMapper = movieMapper;
-    }
 
     @Override
     public List<Movie> findAll() {
@@ -23,7 +21,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(int id) {
-        return this.movieMapper.findById(id).orElseThrow(() -> new ResourceNotFoundException("resource not found"));
+        return this.movieMapper.findById(id).orElseThrow(() -> new NotFoundURLException("resource not found"));
     }
 
     @Override

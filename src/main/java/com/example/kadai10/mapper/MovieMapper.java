@@ -13,13 +13,13 @@ import java.util.Optional;
 @Mapper
 public interface MovieMapper {
 
-    @Select("SELECT * from movies")
+    @Select("SELECT * FROM movies")
     List<Movie> findAll();
 
-    @Select("SELECT * from movies WHERE id = #{id}")
+    @Select("SELECT * FROM movies WHERE id = #{id}")
     Optional<Movie> findById(int id);
 
-    @Insert("INSERT INTO movies (name, director, published_year) VALUES (#{name},#{director},#{publishedYear});")
+    @Insert("INSERT INTO movies (name, director, published_year) VALUES (#{name}, #{director}, #{publishedYear})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void createMovie(MovieForm form);
 }

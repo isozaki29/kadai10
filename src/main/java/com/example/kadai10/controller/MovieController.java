@@ -1,9 +1,10 @@
 package com.example.kadai10.controller;
 
 import com.example.kadai10.entity.Movie;
-import com.example.kadai10.exception.ResourceNotFoundException;
+import com.example.kadai10.exception.NotFoundURLException;
 import com.example.kadai10.form.MovieForm;
 import com.example.kadai10.service.MovieService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,14 +19,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/movies")
+@RequiredArgsConstructor
 public class MovieController {
 
     private final MovieService movieService;
-
-    public MovieController(MovieService movieService) {
-        this.movieService = movieService;
-    }
-
+    
     @GetMapping
     public List<Movie> getMovie() {
         return movieService.findAll();
@@ -45,9 +43,9 @@ public class MovieController {
         return ResponseEntity.created(url).body(Map.of("message", "映画を登録しました。"));
     }
 
-    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ExceptionHandler(value = NotFoundURLException.class)
     public ResponseEntity<Map<String, String>> handleNoResourceFound(
-            ResourceNotFoundException e, HttpServletRequest request) {
+            NotFoundURLException e, HttpServletRequest request) {
         Map<String, String> body = Map.of(
                 "timestamp", ZonedDateTime.now().toString(),
                 "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
