@@ -11,4 +11,8 @@ public interface MovieService {
     Movie findById(int id) throws Exception;
 
     void createMovie(MovieForm form);
+
+    void updateMovie(int id,MovieForm form);
+
+    void deleteMovie(int id);
 }
