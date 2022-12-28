@@ -43,16 +43,16 @@ public class MovieController {
         return ResponseEntity.created(url).body(Map.of("message", "映画を登録しました。"));
     }
 
-    @ExceptionHandler(value = NotFoundURLException.class)
-    public ResponseEntity<Map<String, String>> handleNoResourceFound(
-            NotFoundURLException e, HttpServletRequest request) {
-        Map<String, String> body = Map.of(
-                "timestamp", ZonedDateTime.now().toString(),
-                "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
-                "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
-                "message", e.getMessage(),
-                "path", request.getRequestURI());
-        return new ResponseEntity(body, HttpStatus.NOT_FOUND);
+    @PatchMapping("{id}")
+    public ResponseEntity<Map<String, String>> patchMovie(@PathVariable("id") int id,@RequestBody @Validated MovieForm form) {
+        movieService.updateMovie(id,form);
+        return ResponseEntity.ok(Map.of("message","映画を更新しました。"));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Map<String, String>> deleteMovie(@PathVariable("id") int id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.ok(Map.of("message","映画を削除しました。"));
     }
 
 }

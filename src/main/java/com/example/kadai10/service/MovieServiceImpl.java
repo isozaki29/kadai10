@@ -23,9 +23,20 @@ public class MovieServiceImpl implements MovieService {
     public Movie findById(int id) {
         return this.movieMapper.findById(id).orElseThrow(() -> new NotFoundURLException("resource not found"));
     }
-
     @Override
     public void createMovie(MovieForm form) {
         movieMapper.createMovie(form);
+    }
+
+    @Override
+    public void updateMovie(int id,MovieForm form){
+        movieMapper.findById(id).orElseThrow(() -> new NotFoundURLException("resource not found"));
+        movieMapper.updateMovie(form);
+    }
+
+    @Override
+    public void deleteMovie(int id){
+        movieMapper.findById(id).orElseThrow(() -> new NotFoundURLException("resource not found"));
+        movieMapper.deleteMovie(id);
     }
 }
