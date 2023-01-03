@@ -1,0 +1,11 @@
+movies:
+  - name: "ショーシャンクの空に"
+    director: "フランク・ダラボン"
+    published_year: 1994
+  - name: "この世界の片隅に"
+    director: "片渕須直"
+    published_year: 2020
+  - name: "アルマゲドン"
+    director: "ジェリー・ブラッカイマー"
+    published_year: 1998
+
