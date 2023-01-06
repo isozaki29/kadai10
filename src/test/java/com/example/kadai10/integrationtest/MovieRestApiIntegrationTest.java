@@ -1,7 +1,6 @@
 package com.example.kadai10.integrationtest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -10,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DBRider
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MovieRestApiIntegrationTest {
 
@@ -27,12 +26,16 @@ public class MovieRestApiIntegrationTest {
     MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 映画情報を全件取得して200レスポンスが返ること() throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/movies"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        
 
         JSONAssert.assertEquals("[" +
                 "   {" +

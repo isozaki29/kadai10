@@ -1,9 +1,0 @@
-cacheConnection: false
-cacheTableNames: false
-properties:
-  schema: movie_list
-caseInsensitiveStrategy: LOWERCASE
-connectionConfig:
-  url: "jdbc:mysql://localhost:3307/movie_list"
-  user: "user"
-  password: "password"
