@@ -1,6 +1,5 @@
 package com.example.kadai10.integrationtest;
 
-import com.github.database.rider.core.api.dataset.DataSet;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -35,7 +34,6 @@ public class MovieRestApiIntegrationTest {
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/movies"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        
 
         JSONAssert.assertEquals("[" +
                 "   {" +
@@ -60,7 +58,10 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 指定したIDの映画情報を取得して200レスポンスが返ること() throws Exception {
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/movies/1"))
@@ -76,7 +77,10 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 存在しない映画情報のIDを指定して取得したときに404レスポンスが返ること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/movies/4"))
@@ -84,15 +88,18 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 映画情報の登録成功し201レスポンスとLocationヘッダに登録したidが返ること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/movies")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
-                                "       \"name\": \"ショーシャンクの空に\"," +
-                                "       \"director\": \"フランク・ダラボン\"," +
-                                "       \"publishedYear\": 1994" +
+                                "       \"name\": \"千と千尋の神隠し\"," +
+                                "       \"director\": \"宮崎駿\"," +
+                                "       \"publishedYear\": 2003" +
                                 "   }")
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -100,7 +107,10 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 指定したIDの映画情報を更新して200レスポンスが返ること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/movies/1")
@@ -116,13 +126,16 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 存在しないIDの映画情報を指定して更新したとき404レスポンスが返ること() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/movies/99")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/movies/4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
-                                "       \"id\":99," +
+                                "       \"id\":4," +
                                 "       \"name\": \"千と千尋の神隠し\"," +
                                 "       \"director\": \"宮崎駿\"," +
                                 "       \"publishedYear\": 2003" +
@@ -131,7 +144,10 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 指定したIDの映画情報を削除して200レスポンスが返ること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/movies/1"))
@@ -139,10 +155,13 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "datasets/movies.yml")
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
     @Transactional
     void 存在しないIDの映画情報を指定して削除したときに404レスポンスが返ること() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/movies/99"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/movies/4"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
