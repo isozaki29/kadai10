@@ -112,6 +112,78 @@ public class MovieRestApiIntegrationTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
     )
     @Transactional
+    void 映画情報のnameを空で登録した場合400レスポンスが返ること() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{" +
+                        "       \"name\": \"\"," +
+                        "       \"director\": \"宮崎駿\"," +
+                        "       \"publishedYear\": 2003" +
+                        "   }")
+                )
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Transactional
+    void 映画情報のdirectorを空で登録した場合400レスポンスが返ること() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post("/movies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "       \"name\": \"千と千尋の神隠し\"," +
+                                "       \"director\": \"\"," +
+                                "       \"publishedYear\": 2003" +
+                                "   }")
+                )
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Transactional
+    void 映画情報のpublishedYearをnullで登録した場合400レスポンスが返ること() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post("/movies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "       \"name\": \"千と千尋の神隠し\"," +
+                                "       \"director\": \"宮崎駿\"," +
+                                "       \"publishedYear\": " +
+                                "   }")
+                )
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Transactional
+    void 映画情報のpublishedYearを負の値で登録した場合400レスポンスが返ること() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post("/movies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "       \"name\": \"千と千尋の神隠し\"," +
+                                "       \"director\": \"宮崎駿\"," +
+                                "       \"publishedYear\": -1000" +
+                                "   }")
+                )
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    @Sql(
+            scripts = {"classpath:/sqlannotation/delete-movies.sql", "classpath:/sqlannotation/insert-movies.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Transactional
     void 指定したIDの映画情報を更新して200レスポンスが返ること() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/movies/1")
                         .contentType(MediaType.APPLICATION_JSON)
