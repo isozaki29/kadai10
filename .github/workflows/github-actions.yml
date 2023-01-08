@@ -21,6 +21,9 @@ jobs:
 
       - name: Docker run
         run: docker compose up -d
+        
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Test with Gradle
         id: test
